@@ -227,6 +227,46 @@
 
   /* 板卡线稿 SVG 通用 */
   .board-art { --line: rgba(147, 164, 189, 0.55); }
+
+  /* Tab 切换 */
+  .tabs { display: flex; gap: 6px; background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); border-radius: 10px; padding: 4px; }
+  .tab-btn {
+    border: none; cursor: pointer; font-size: 13.5px; font-weight: 600; white-space: nowrap;
+    color: var(--text-dim); background: transparent; border-radius: 7px; padding: 6px 14px;
+    font-family: inherit; transition: all .2s;
+  }
+  .tab-btn.active { color: #04121a; background: linear-gradient(92deg, var(--cyan), var(--blue)); }
+  .tab-btn:not(.active):hover { color: var(--text); }
+  @media (max-width: 640px) { .tab-btn { font-size: 12px; padding: 5px 10px; } }
+  .tab-pane[hidden] { display: none; }
+  .nav-links[hidden] { display: none; }
+
+  /* 视觉研发板块 */
+  .paper-list { display: grid; gap: 12px; margin-top: 26px; }
+  .paper {
+    border: 1px solid var(--card-border); border-radius: 12px; padding: 16px 20px;
+    background: var(--card); font-size: 14px; color: var(--text-dim);
+    display: flex; justify-content: space-between; gap: 16px; align-items: baseline; flex-wrap: wrap;
+  }
+  .paper b { color: var(--text); }
+  .paper .num { font-family: var(--mono); color: var(--amber); white-space: nowrap; }
+  .paper a { color: var(--cyan); text-decoration: none; font-family: var(--mono); font-size: 12.5px; }
+  .quote {
+    border-left: 3px solid var(--green); background: rgba(52,211,153,0.06);
+    border-radius: 0 10px 10px 0; padding: 14px 18px; margin-top: 18px;
+    font-size: 14px; color: var(--text-dim); font-style: italic;
+  }
+  .quote b { color: var(--green); font-style: normal; }
+  .formula {
+    font-family: var(--mono); font-size: 14px; color: var(--text);
+    background: rgba(8,14,26,0.7); border: 1px solid var(--card-border);
+    border-radius: 10px; padding: 12px 18px; margin-top: 14px;
+  }
+  .tbl-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tbl-x table { min-width: 780px; }
+  .bf-vllm { background: linear-gradient(90deg, #d97706, var(--amber)); }
+  .bf-q4   { background: linear-gradient(90deg, #059669, var(--green)); }
+  .bf-bf16 { background: linear-gradient(90deg, #6366f1, var(--violet)); }
 </style>
 </head>
 <body>
@@ -234,16 +274,25 @@
 
 <nav>
   <div class="wrap nav-inner">
-    <div class="logo">Buddi<span>AI</span> · Hardware</div>
-    <div class="nav-links">
-      <a href="#cloud">云端处理</a>
+    <div class="logo">Buddi<span>AI</span></div>
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="hw" role="tab">硬件方案</button>
+      <button class="tab-btn" data-tab="lab" role="tab">视觉研发 · 4090</button>
+    </div>
+    <div class="nav-links" id="links-hw">
       <a href="#hub">端云协同</a>
-      <a href="#edge">纯端侧</a>
       <a href="#compare">速度对比</a>
-      <a href="#contact">联系我们</a>
+      <a href="#contact">联系</a>
+    </div>
+    <div class="nav-links" id="links-lab" hidden>
+      <a href="#backends">双后端</a>
+      <a href="#quant">量化</a>
+      <a href="#video">视频实测</a>
     </div>
   </div>
 </nav>
+
+<div class="tab-pane" id="tab-hw">
 
 <header class="wrap">
   <div class="tag">AI HARDWARE · VOICE PIPELINE</div>
@@ -518,6 +567,141 @@
   </div>
 </section>
 
+</div><!-- /tab-hw -->
+
+<!-- ============ 视觉研发实验室 ============ -->
+<div class="tab-pane" id="tab-lab" hidden>
+
+<header class="wrap">
+  <div class="tag" style="color: var(--amber); border-color: rgba(251,191,36,0.35); background: rgba(251,191,36,0.06)">VISION LAB · RTX 4090 · PROTOCOL v0.1</div>
+  <h1>视觉模型推理研发<br><span class="grad">每个数字都可复现</span></h1>
+  <p class="sub">固定输入 · 贪心解码 128 token · 2 次预热 + 20 次测量取中位数。与「硬件方案」板块面向多种硬件不同，本板块为纯技术研发，全部数据实测于单张 RTX 4090。</p>
+  <div class="hero-stats">
+    <div class="hs"><b>6×2</b><i>模型 × 推理后端</i></div>
+    <div class="hs"><b>8.1×</b><i>Q4 量化 decode 提速</i></div>
+    <div class="hs"><b>288ms</b><i>看懂 10 秒视频（TTFT）</i></div>
+  </div>
+</header>
+
+<!-- L1 双后端 -->
+<section id="backends" class="wrap">
+  <div class="sec-head reveal">
+    <div class="sec-kicker">L1 / BACKENDS</div>
+    <h2>llama.cpp × transformers 双后端对比</h2>
+    <p>同一模型、同一张图、同一协议，唯一变量是推理栈：HF transformers（bf16，公平基线）对 llama.cpp（Q4_K_M 量化，部署栈）。</p>
+  </div>
+  <div class="chart-card reveal">
+    <div class="tbl-x">
+    <table style="margin-top:0">
+      <thead>
+        <tr><th>模型</th><th>输入 token *</th><th>TTFT bf16</th><th>TTFT Q4</th><th>decode bf16</th><th>decode Q4</th><th>提速</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Qwen2.5-VL-3B</td><td class="mono">418</td><td class="mono">135.5 ms</td><td class="mono ok">115.2 ms</td><td class="mono">35.0 tok/s</td><td class="mono ok">275.9</td><td class="mono ok">7.9×</td></tr>
+        <tr><td>Qwen2-VL-2B</td><td class="mono">418</td><td class="mono ok">65.7 ms</td><td class="mono">99.8 ms</td><td class="mono">48.5</td><td class="mono ok">412.9</td><td class="mono ok">8.5×</td></tr>
+        <tr><td>SmolVLM2-2.2B</td><td class="mono">1097 → 100</td><td class="mono">123.0 ms</td><td class="mono ok">60.8 ms</td><td class="mono">66.2</td><td class="mono ok">505.1</td><td class="mono ok">7.6×</td></tr>
+        <tr><td>InternVL3-2B</td><td class="mono">3345 → 1317</td><td class="mono">172.9 ms</td><td class="mono no">501.6 ms</td><td class="mono">52.0</td><td class="mono ok">438.0</td><td class="mono ok">8.4×</td></tr>
+        <tr><td>LLaVA-1.6-7B</td><td class="mono">2357 → 2895</td><td class="mono">277.0 ms</td><td class="mono no">571.6 ms</td><td class="mono">45.1</td><td class="mono ok">165.6</td><td class="mono ok">3.7×</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="tbl-note">* 「A → B」表示 transformers 与 llama.cpp 的预处理产生不同视觉 token 数——同一模型在不同框架看到的不是同一张图。跨框架对比必须以实测 input_tokens 为准。</p>
+    <div class="formula">TTFT ≈ 固定开销 + 斜率 × 输入token　｜　transformers: 91ms + 0.10ms/tok　·　llama.cpp: 49ms + 0.16ms/tok</div>
+    <p class="tbl-note">三个结论：① Q4 decode 全线 4–8×，五模型全部落在带宽定标线（104 tok/s × 8B ÷ 参数量）±1% 内；② llama.cpp 视觉编码是短板，视觉 token 多的模型 TTFT 恶化 2–3×；③ 它没有原生视频管线——这两点即二次开发切入点。</p>
+  </div>
+</section>
+
+<!-- L2 量化 -->
+<section id="quant" class="wrap">
+  <div class="sec-head reveal">
+    <div class="sec-kicker">L2 / QUANTIZATION</div>
+    <h2>量化：速度白拿，质量守住</h2>
+    <p>Q4_K_M（约 4.5 bit/权重）把每个 token 要搬运的权重字节砍到 1/4——decode 是内存带宽瓶颈，提速近乎线性；关键问题是质量掉不掉。我们用 18 道人工核对答案的图像任务实测。</p>
+  </div>
+  <div class="chart-card reveal">
+    <div class="chart-title">18 题任务集 · 三配置正确率与首字延迟（Qwen2.5-VL-3B）</div>
+    <div class="chart-sub">题型覆盖：计数 / 颜色 / OCR / 动作 / 异常检测 / 幻觉陷阱 · 人工逐题评分</div>
+    <div class="bar-group">
+      <div class="bar-label"><span class="name">llama.cpp Q4 × 原图</span><span class="val ok">86% 正确 · TTFT 126ms · 0.6s/题</span></div>
+      <div class="bar-track"><div class="bar-fill bf-q4" data-w="86%"></div></div>
+    </div>
+    <div class="bar-group">
+      <div class="bar-label"><span class="name">transformers bf16 × 原图（基线）</span><span class="val">83% 正确 · TTFT 177ms · 3.7s/题</span></div>
+      <div class="bar-track"><div class="bar-fill bf-bf16" data-w="83%"></div></div>
+    </div>
+    <div class="bar-group">
+      <div class="bar-label"><span class="name">llama.cpp Q4 × 1/4 像素</span><span class="val">64% 正确 · TTFT 56ms</span></div>
+      <div class="bar-track"><div class="bar-fill bf-vllm" data-w="64%"></div></div>
+    </div>
+    <p class="tbl-note">结论：<b class="ok">Q4 量化无质量代价</b>（86% vs 基线 83%，同分数段，速度快 6 倍）；<b class="mid">1/4 像素的代价高度集中</b>——丢的全是计数与细小物体，颜色 / 动作 / 大字 OCR / 抗幻觉全部保住，适合作端侧常驻快筛档。组合栈（llama.cpp × 1/4 token）实测 TTFT 69ms + 284 tok/s，对基线端到端 7.3×。</p>
+  </div>
+  <div class="paper-list reveal">
+    <div class="paper"><span><b>GPTQ</b> · ICLR 2023 — 后训练 4-bit 量化开山作，175B 模型压进单卡</span><span class="num">~1/4 显存</span><a href="https://arxiv.org/abs/2210.17323" target="_blank" rel="noopener">arXiv:2210.17323</a></div>
+    <div class="paper"><span><b>AWQ</b> · MLSys 2024 最佳论文 — 激活感知量化，保护 ~1% 显著权重通道</span><span class="num">4-bit 近无损</span><a href="https://arxiv.org/abs/2306.00978" target="_blank" rel="noopener">arXiv:2306.00978</a></div>
+    <div class="paper"><span><b>k-quants（Q4_K_M）</b> · llama.cpp — 分块混合位宽，本实验所用格式</span><span class="num">≈4.5 bit/权重</span><a href="https://github.com/ggml-org/llama.cpp" target="_blank" rel="noopener">github</a></div>
+    <div class="paper"><span><b>FastV</b> · ECCV 2024 — 第 2 层后按注意力剪视觉 token，免训练</span><span class="num">-45% FLOPs</span><a href="https://arxiv.org/abs/2403.06764" target="_blank" rel="noopener">arXiv:2403.06764</a></div>
+    <div class="paper"><span><b>VScan</b> · 2025 — 视觉 token 缩减在 Qwen2.5-VL 上的系统研究</span><span class="num">TTFT 最高 4.5×</span><a href="https://arxiv.org/abs/2505.22654" target="_blank" rel="noopener">arXiv:2505.22654</a></div>
+    <div class="paper"><span><b>FastVLM</b> · Apple CVPR 2025 — 高效视觉编码器，把 token 压缩做进结构</span><span class="num">TTFT 85×</span><a href="https://arxiv.org/abs/2412.13303" target="_blank" rel="noopener">机器学习研究页</a></div>
+  </div>
+</section>
+
+<!-- L3 视频 -->
+<section id="video" class="wrap">
+  <div class="sec-head reveal">
+    <div class="sec-kicker">L3 / VIDEO</div>
+    <h2>vLLM 真视频实测：288ms 看懂 10 秒视频</h2>
+    <p>10 秒 360p 视频（Big Buck Bunny）经 base64 直接喂给 vLLM 的 OpenAI 兼容接口，Qwen2.5-VL-3B 原生视频输入，无任何手工抽帧。</p>
+  </div>
+  <div class="arch reveal" style="--ac: var(--amber)">
+    <div class="arch-top">
+      <span class="arch-num">VLLM · VIDEO-10S</span>
+      <h3>视频的延迟账单</h3>
+      <span class="hw">RTX 4090</span>
+      <span class="hw">Qwen2.5-VL-3B bf16</span>
+    </div>
+    <div class="arch-body">
+      <div>
+        <p class="arch-desc">10 秒视频被抽成约 20 帧、编码为 <strong>3018 个视觉 token</strong>（约 150 token/帧）——是单图（418）的 7.2 倍。vLLM 只用 2.2 倍的时间吞下它：<strong>prefill 斜率约 0.06ms/token</strong>，是三个后端中最优（transformers 0.10、llama.cpp 0.16）。20 次测量的 decode 速度波动仅 ±0.15%。</p>
+        <div class="flow">
+          <span class="node hot">10s 视频</span><span class="arr">→</span>
+          <span class="node">抽帧 ~20</span><span class="arr">→</span>
+          <span class="node">3018 token</span><span class="arr">→</span>
+          <span class="node hot">首字 288ms</span><span class="arr">→</span>
+          <span class="node">128 字 · 1.33s</span>
+        </div>
+        <div class="quote">模型回答：<i>"a small animated creature with long limbs … looking down into a dark hole in the ground"</i> —— <b>内容正确 ✓</b>（正是 Big Buck Bunny 开场画面）</div>
+      </div>
+      <div class="metrics">
+        <h4>实测数据（20 次中位数）</h4>
+        <div class="m-row"><span class="k">视频输入 token</span><span class="v">3018</span></div>
+        <div class="m-row"><span class="k">每帧 token 成本</span><span class="v">≈150 tok/帧</span></div>
+        <div class="m-row"><span class="k">TTFT（p10–p90）</span><span class="v good">287.7 ms（283–293）</span></div>
+        <div class="m-row"><span class="k">decode</span><span class="v">122.9 tok/s</span></div>
+        <div class="m-row"><span class="k">端到端（128 字回答）</span><span class="v good">1.33 s</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="chart-card reveal" style="margin-top:20px">
+    <div class="chart-title">三后端 prefill 单价（每个输入 token 的 TTFT 成本，越短越好）</div>
+    <div class="chart-sub">视频负载 = 海量输入 token，prefill 单价决定视频理解的可行性</div>
+    <div class="bar-group">
+      <div class="bar-label"><span class="name">vLLM（视频原生）</span><span class="val ok">0.06 ms/token</span></div>
+      <div class="bar-track"><div class="bar-fill bf-vllm" data-w="26%"></div></div>
+    </div>
+    <div class="bar-group">
+      <div class="bar-label"><span class="name">transformers bf16</span><span class="val">0.10 ms/token</span></div>
+      <div class="bar-track"><div class="bar-fill bf-bf16" data-w="43%"></div></div>
+    </div>
+    <div class="bar-group">
+      <div class="bar-label"><span class="name">llama.cpp Q4（无视频管线，需抽帧转多图)</span><span class="val mid">0.16 ms/token</span></div>
+      <div class="bar-track"><div class="bar-fill bf-q4" data-w="70%"></div></div>
+    </div>
+    <p class="tbl-note">外推到边缘硬件：150 token/帧 × 边缘算力 ≈ 每帧 0.3–0.5s prefill，8 帧视频 TTFT 达 2–4s——这正是抽帧策略与视觉 token 压缩在端侧价值千金的原因，也是本实验室与「硬件方案」板块的接合点。</p>
+  </div>
+</section>
+
+</div><!-- /tab-lab -->
+
 <!-- 联系 -->
 <section id="contact" class="wrap">
   <div class="contact reveal">
@@ -535,6 +719,21 @@
 </footer>
 
 <script>
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+    document.getElementById('tab-hw').hidden = name !== 'hw';
+    document.getElementById('tab-lab').hidden = name !== 'lab';
+    document.getElementById('links-hw').hidden = name !== 'hw';
+    document.getElementById('links-lab').hidden = name !== 'lab';
+    window.scrollTo({ top: 0 });
+    document.querySelectorAll('.tab-pane:not([hidden]) .reveal').forEach(el => io.observe(el));
+    document.querySelectorAll('.tab-pane:not([hidden]) .chart-card').forEach(el => chartIO.observe(el));
+  }
+  document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => {
+    switchTab(b.dataset.tab);
+    history.replaceState(null, '', b.dataset.tab === 'lab' ? '#lab' : '#');
+  }));
+
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } });
   }, { threshold: 0.12 });
@@ -549,6 +748,8 @@
     });
   }, { threshold: 0.3 });
   document.querySelectorAll('.chart-card').forEach(el => chartIO.observe(el));
+
+  if (location.hash === '#lab') switchTab('lab');
 </script>
 </body>
 </html>
