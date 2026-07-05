@@ -8,7 +8,6 @@
 <style>
   :root {
     --bg: #06090f;
-    --bg-2: #0b1220;
     --card: rgba(255, 255, 255, 0.04);
     --card-border: rgba(120, 180, 255, 0.14);
     --text: #e6edf7;
@@ -29,7 +28,6 @@
     line-height: 1.7;
     overflow-x: hidden;
   }
-  /* 背景网格 + 光晕 */
   .bg-fx {
     position: fixed; inset: 0; z-index: -1;
     background:
@@ -49,7 +47,6 @@
 
   .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
 
-  /* 导航 */
   nav {
     position: sticky; top: 0; z-index: 10;
     backdrop-filter: blur(14px);
@@ -57,14 +54,17 @@
     border-bottom: 1px solid rgba(120, 180, 255, 0.10);
   }
   .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 60px; }
-  .logo { font-weight: 700; font-size: 17px; letter-spacing: 0.5px; }
+  .logo { font-weight: 700; font-size: 17px; letter-spacing: 0.5px; white-space: nowrap; }
   .logo span { color: var(--cyan); }
-  .nav-links { display: flex; gap: 26px; font-size: 14px; }
+  .nav-links { display: flex; gap: 24px; font-size: 14px; }
   .nav-links a { color: var(--text-dim); text-decoration: none; transition: color .2s; white-space: nowrap; }
   .nav-links a:hover { color: var(--cyan); }
+  @media (max-width: 640px) {
+    .logo { font-size: 15px; }
+    .nav-links { gap: 13px; font-size: 12.5px; overflow-x: auto; }
+  }
 
-  /* Hero */
-  header { padding: 96px 0 72px; text-align: center; }
+  header { padding: 92px 0 68px; text-align: center; }
   .tag {
     display: inline-block; font-size: 12.5px; font-family: var(--mono);
     color: var(--cyan); border: 1px solid rgba(34, 211, 238, 0.35);
@@ -79,46 +79,42 @@
     background: linear-gradient(92deg, var(--cyan), var(--blue) 55%, var(--violet));
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
-  .sub { margin: 22px auto 0; max-width: 640px; color: var(--text-dim); font-size: 17px; }
-  .hero-stats {
-    display: flex; justify-content: center; gap: 48px; margin-top: 52px; flex-wrap: wrap;
-  }
+  .sub { margin: 20px auto 0; max-width: 560px; color: var(--text-dim); font-size: 17px; }
+  .hero-stats { display: flex; justify-content: center; gap: 48px; margin-top: 48px; flex-wrap: wrap; }
   .hs { text-align: center; }
   .hs b { display: block; font-size: 30px; font-family: var(--mono); color: var(--cyan); font-weight: 600; }
   .hs i { font-style: normal; font-size: 13px; color: var(--text-dim); }
 
-  /* 通用 section */
-  section { padding: 72px 0; scroll-margin-top: 60px; }
-  .sec-head { margin-bottom: 40px; }
+  section { padding: 68px 0; scroll-margin-top: 60px; }
+  .sec-head { margin-bottom: 36px; }
   .sec-kicker { font-family: var(--mono); font-size: 13px; color: var(--cyan); letter-spacing: 2px; margin-bottom: 10px; }
   .sec-head h2 { font-size: clamp(24px, 3.4vw, 34px); font-weight: 700; }
-  .sec-head p { color: var(--text-dim); margin-top: 12px; max-width: 720px; }
+  .sec-head p { color: var(--text-dim); margin-top: 10px; max-width: 680px; }
 
-  /* 架构卡片 */
   .arch {
     border: 1px solid var(--card-border); border-radius: 18px;
     background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
-    padding: 34px 34px 28px; margin-bottom: 34px;
+    padding: 32px 32px 30px;
     position: relative; overflow: hidden;
   }
   .arch::before {
-    content: ""; position: absolute; top: 0; left: 34px; right: 34px; height: 1px;
+    content: ""; position: absolute; top: 0; left: 32px; right: 32px; height: 1px;
     background: linear-gradient(90deg, transparent, var(--ac, var(--cyan)), transparent);
     opacity: 0.7;
   }
   .arch-top { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
   .arch-num { font-family: var(--mono); font-size: 13px; color: var(--ac, var(--cyan)); letter-spacing: 1.5px; }
-  .arch h3 { font-size: 23px; font-weight: 700; }
+  .arch h3 { font-size: 22px; font-weight: 700; }
   .arch .hw {
     font-size: 12.5px; font-family: var(--mono); color: var(--text-dim);
     border: 1px solid rgba(147, 164, 189, 0.3); border-radius: 6px; padding: 2px 9px;
   }
-  .arch-body { display: grid; grid-template-columns: 1.15fr 1fr; gap: 34px; margin-top: 20px; }
+  .arch-body { display: grid; grid-template-columns: 1.15fr 1fr; gap: 30px; margin-top: 18px; }
   @media (max-width: 820px) { .arch-body { grid-template-columns: 1fr; } }
   .arch-desc { color: var(--text-dim); font-size: 15px; }
   .arch-desc strong { color: var(--text); }
   .flow {
-    font-family: var(--mono); font-size: 12.5px; margin: 18px 0;
+    font-family: var(--mono); font-size: 12.5px; margin-top: 16px;
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   }
   .flow .node {
@@ -127,53 +123,74 @@
   }
   .flow .node.hot { border-color: var(--ac, var(--cyan)); color: var(--ac, var(--cyan)); background: transparent; }
   .flow .arr { color: var(--text-dim); }
-  .pill-list { list-style: none; margin-top: 14px; }
-  .pill-list li { padding-left: 20px; position: relative; margin-bottom: 7px; font-size: 14.5px; color: var(--text-dim); }
-  .pill-list li::before { content: "▸"; position: absolute; left: 2px; color: var(--ac, var(--cyan)); }
 
-  /* 指标块 */
   .metrics {
-    border: 1px solid var(--card-border); border-radius: 14px; padding: 22px 24px;
+    border: 1px solid var(--card-border); border-radius: 14px; padding: 20px 24px;
     background: rgba(8, 14, 26, 0.55); align-self: start;
   }
-  .metrics h4 { font-size: 13px; letter-spacing: 1.5px; color: var(--text-dim); font-weight: 600; margin-bottom: 16px; }
+  .metrics h4 { font-size: 13px; letter-spacing: 1.5px; color: var(--text-dim); font-weight: 600; margin-bottom: 14px; }
   .m-row { display: flex; justify-content: space-between; align-items: baseline; padding: 9px 0; border-bottom: 1px dashed rgba(147,164,189,0.16); }
   .m-row:last-child { border-bottom: none; }
   .m-row .k { font-size: 13.5px; color: var(--text-dim); }
   .m-row .v { font-family: var(--mono); font-size: 15px; color: var(--text); font-weight: 500; }
   .m-row .v.good { color: var(--green); }
   .m-row .v.warn { color: var(--amber); }
+  .m-row .v.bad { color: #f87171; }
 
-  /* 对比图表 */
+  /* 媒体区：设备图 + 视频占位 */
+  .media-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 26px; }
+  @media (max-width: 820px) { .media-grid { grid-template-columns: 1fr; } }
+  .shot, .video-ph {
+    position: relative; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden;
+    background: radial-gradient(ellipse 80% 100% at 50% 0%, rgba(59,130,246,0.10), transparent), rgba(8, 14, 26, 0.7);
+  }
+  .shot { border: 1px solid var(--card-border); }
+  .shot svg { width: 100%; height: 100%; display: block; }
+  .media-label {
+    position: absolute; left: 12px; bottom: 12px; z-index: 2;
+    font-family: var(--mono); font-size: 11.5px; color: var(--text-dim);
+    background: rgba(6, 9, 15, 0.75); border: 1px solid var(--card-border);
+    border-radius: 6px; padding: 3px 10px; backdrop-filter: blur(6px);
+  }
+  .video-ph {
+    border: 1.5px dashed rgba(147, 164, 189, 0.35);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  }
+  .video-ph .play {
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 1.5px solid var(--ac, var(--cyan)); color: var(--ac, var(--cyan));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; padding-left: 4px;
+    background: rgba(34, 211, 238, 0.06);
+  }
+  .video-ph .ph-title { font-size: 14.5px; font-weight: 600; }
+  .video-ph .ph-sub { font-family: var(--mono); font-size: 11.5px; color: var(--text-dim); letter-spacing: 1px; }
+
   .chart-card {
     border: 1px solid var(--card-border); border-radius: 18px;
-    background: rgba(8, 14, 26, 0.5); padding: 34px;
+    background: rgba(8, 14, 26, 0.5); padding: 32px;
   }
   .chart-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
-  .chart-sub { font-size: 13px; color: var(--text-dim); margin-bottom: 26px; }
-  .bar-group { margin-bottom: 22px; }
-  .bar-label { display: flex; justify-content: space-between; font-size: 13.5px; margin-bottom: 7px; }
+  .chart-sub { font-size: 13px; color: var(--text-dim); margin-bottom: 24px; }
+  .bar-group { margin-bottom: 20px; }
+  .bar-label { display: flex; justify-content: space-between; font-size: 13.5px; margin-bottom: 7px; gap: 12px; flex-wrap: wrap; }
   .bar-label .name { color: var(--text); }
   .bar-label .val { font-family: var(--mono); color: var(--text-dim); }
   .bar-track { height: 12px; border-radius: 6px; background: rgba(147,164,189,0.12); overflow: hidden; }
-  .bar-fill {
-    height: 100%; border-radius: 6px; width: 0;
-    transition: width 1.1s cubic-bezier(.22,.9,.35,1);
-  }
+  .bar-fill { height: 100%; border-radius: 6px; width: 0; transition: width 1.1s cubic-bezier(.22,.9,.35,1); }
   .bf-cloud { background: linear-gradient(90deg, #0ea5e9, var(--cyan)); }
   .bf-hub   { background: linear-gradient(90deg, #6366f1, var(--violet)); }
   .bf-edge  { background: linear-gradient(90deg, #059669, var(--green)); }
 
-  table { width: 100%; border-collapse: collapse; margin-top: 40px; font-size: 14px; }
-  th, td { padding: 13px 14px; text-align: left; border-bottom: 1px solid rgba(147,164,189,0.14); }
-  th { color: var(--text-dim); font-weight: 600; font-size: 12.5px; letter-spacing: 1px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 36px; font-size: 14px; }
+  th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid rgba(147,164,189,0.14); }
+  th { color: var(--text-dim); font-weight: 600; font-size: 12.5px; letter-spacing: 1px; white-space: nowrap; }
   td:first-child { color: var(--text-dim); }
   td { color: var(--text); }
-  td .mono { font-family: var(--mono); font-size: 13.5px; }
+  td .mono, .mono { font-family: var(--mono); font-size: 13.5px; }
   .ok { color: var(--green); } .no { color: #f87171; } .mid { color: var(--amber); }
   .tbl-note { font-size: 12.5px; color: var(--text-dim); margin-top: 14px; }
 
-  /* 选型 */
   .pick-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   @media (max-width: 820px) { .pick-grid { grid-template-columns: 1fr; } }
   .pick {
@@ -182,20 +199,19 @@
   }
   .pick b { display: block; color: var(--text); font-size: 16px; margin-bottom: 10px; }
 
-  /* 联系 */
   .contact {
     border: 1px solid var(--card-border); border-radius: 20px; text-align: center;
-    padding: 60px 30px;
+    padding: 56px 30px;
     background:
       radial-gradient(ellipse 60% 90% at 50% 0%, rgba(59,130,246,0.12), transparent),
       rgba(8, 14, 26, 0.5);
   }
   .contact h2 { font-size: 28px; margin-bottom: 12px; }
-  .contact p { color: var(--text-dim); margin-bottom: 30px; }
+  .contact p { color: var(--text-dim); margin-bottom: 28px; }
   .contact-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
   .btn {
     display: inline-block; text-decoration: none; font-size: 15px; font-weight: 600;
-    padding: 12px 28px; border-radius: 10px; transition: transform .15s, box-shadow .15s;
+    padding: 12px 28px; border-radius: 10px; transition: transform .15s;
   }
   .btn-primary {
     color: #04121a; background: linear-gradient(92deg, var(--cyan), var(--blue));
@@ -206,9 +222,11 @@
 
   footer { padding: 36px 0 44px; text-align: center; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(120,180,255,0.08); margin-top: 40px; }
 
-  /* 滚动入场 */
   .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s, transform .7s; }
   .reveal.on { opacity: 1; transform: none; }
+
+  /* 板卡线稿 SVG 通用 */
+  .board-art { --line: rgba(147, 164, 189, 0.55); }
 </style>
 </head>
 <body>
@@ -230,108 +248,158 @@
 <header class="wrap">
   <div class="tag">AI HARDWARE · VOICE PIPELINE</div>
   <h1>AI 硬件语音交互<br><span class="grad">三种架构，一张延迟账单</span></h1>
-  <p class="sub">从 ESP32 直连云端，到家庭 Hub 端云协同，再到 Jetson / 香橙派纯本地推理——我们把每一毫秒都拆开给你看，帮你选对方案。</p>
+  <p class="sub">云端直连 · Hub 端云协同 · 纯本地推理——把每一毫秒拆开给你看。</p>
   <div class="hero-stats">
     <div class="hs"><b>3</b><i>种部署架构</i></div>
-    <div class="hs"><b>~300ms</b><i>本地 ASR 实测延迟</i></div>
-    <div class="hs"><b>1.45s</b><i>端云协同全管线实测</i></div>
+    <div class="hs"><b>~300ms</b><i>本地 ASR 实测</i></div>
+    <div class="hs"><b>1.45s</b><i>Hub 全管线实测</i></div>
   </div>
 </header>
 
-<!-- 模块一：云端处理 -->
+<!-- 01 云端处理 -->
 <section id="cloud" class="wrap">
   <div class="sec-head reveal">
     <div class="sec-kicker">01 / CLOUD</div>
     <h2>云端处理</h2>
-    <p>设备端只做拾音与播放，ASR、LLM、TTS 全部在云端完成。硬件门槛与成本最低，适合快速量产。</p>
+    <p>设备只做拾音与播放，ASR / LLM / TTS 全部在云端。成本最低，能力上限最高。</p>
   </div>
   <div class="arch reveal" style="--ac: var(--cyan)">
     <div class="arch-top">
       <span class="arch-num">ARCH-01</span>
       <h3>轻终端 + 全云管线</h3>
       <span class="hw">ESP32-S3</span>
-      <span class="hw">微雪 ESP32-S3 Touch AMOLED</span>
+      <span class="hw">微雪 Touch AMOLED</span>
     </div>
     <div class="arch-body">
       <div>
-        <p class="arch-desc">本地接收设备采用 <strong>ESP32-S3</strong> 或<strong>微雪（Waveshare）</strong>系列开发板：双核 240MHz、内置 Wi-Fi，跑轻量唤醒词检测（如 ESP-SR），随后将音频流式上传云端。整条智能管线跑在服务器上，模型能力上限最高，OTA 升级也只需要改云端。</p>
+        <p class="arch-desc"><strong>ESP32-S3</strong> 或<strong>微雪（Waveshare）</strong>开发板本地只跑唤醒词，音频流式上云。模型可随时换云端旗舰，OTA 只改服务器；代价是延迟随公网波动，断网即失能，语音需上云。</p>
         <div class="flow">
-          <span class="node hot">MIC · ESP32-S3</span><span class="arr">→</span>
-          <span class="node">Wi-Fi / WebSocket</span><span class="arr">→</span>
+          <span class="node hot">ESP32-S3</span><span class="arr">→</span>
           <span class="node">云端 ASR</span><span class="arr">→</span>
           <span class="node">云端 LLM</span><span class="arr">→</span>
           <span class="node">云端 TTS</span><span class="arr">→</span>
-          <span class="node hot">SPK · 设备播放</span>
+          <span class="node hot">设备播放</span>
         </div>
-        <ul class="pill-list">
-          <li>单机 BOM 最低（几十元级），无本地算力要求</li>
-          <li>模型可随时换最强云端大模型，能力天花板高</li>
-          <li>延迟受网络 RTT 与云端排队影响，存在波动（±300ms 常见）</li>
-          <li>断网即失能；语音数据需上云，隐私合规成本高</li>
-        </ul>
       </div>
       <div class="metrics">
-        <h4>典型延迟画像 *</h4>
+        <h4>延迟画像 *</h4>
         <div class="m-row"><span class="k">网络上行 + RTT</span><span class="v">80–200 ms</span></div>
         <div class="m-row"><span class="k">云端流式 ASR</span><span class="v">200–400 ms</span></div>
         <div class="m-row"><span class="k">LLM TTFT（首字延迟）</span><span class="v">300–600 ms</span></div>
         <div class="m-row"><span class="k">端到端首响</span><span class="v warn">1.0–1.8 s</span></div>
-        <div class="m-row"><span class="k">离线可用性</span><span class="v" style="color:#f87171">不可用</span></div>
+        <div class="m-row"><span class="k">离线可用</span><span class="v bad">✕</span></div>
+      </div>
+    </div>
+    <div class="media-grid">
+      <div class="shot">
+        <!-- ESP32-S3 开发板示意图（可替换为实拍照片 <img>） -->
+        <svg class="board-art" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ESP32-S3 开发板示意图">
+          <rect x="52" y="30" width="216" height="120" rx="10" fill="rgba(34,211,238,0.05)" stroke="var(--line)" stroke-width="1.5"/>
+          <g stroke="var(--line)" stroke-width="1.2">
+            <line x1="66" y1="30" x2="66" y2="22"/><line x1="82" y1="30" x2="82" y2="22"/><line x1="98" y1="30" x2="98" y2="22"/><line x1="114" y1="30" x2="114" y2="22"/><line x1="130" y1="30" x2="130" y2="22"/><line x1="146" y1="30" x2="146" y2="22"/><line x1="162" y1="30" x2="162" y2="22"/><line x1="178" y1="30" x2="178" y2="22"/><line x1="194" y1="30" x2="194" y2="22"/><line x1="210" y1="30" x2="210" y2="22"/><line x1="226" y1="30" x2="226" y2="22"/><line x1="242" y1="30" x2="242" y2="22"/>
+            <line x1="66" y1="150" x2="66" y2="158"/><line x1="82" y1="150" x2="82" y2="158"/><line x1="98" y1="150" x2="98" y2="158"/><line x1="114" y1="150" x2="114" y2="158"/><line x1="130" y1="150" x2="130" y2="158"/><line x1="146" y1="150" x2="146" y2="158"/><line x1="162" y1="150" x2="162" y2="158"/><line x1="178" y1="150" x2="178" y2="158"/><line x1="194" y1="150" x2="194" y2="158"/><line x1="210" y1="150" x2="210" y2="158"/><line x1="226" y1="150" x2="226" y2="158"/><line x1="242" y1="150" x2="242" y2="158"/>
+          </g>
+          <rect x="150" y="58" width="86" height="62" rx="5" fill="rgba(59,130,246,0.10)" stroke="#3b82f6" stroke-width="1.4"/>
+          <text x="193" y="93" text-anchor="middle" font-family="monospace" font-size="11" fill="#22d3ee">ESP32-S3</text>
+          <path d="M132 62 l8 8 -8 8 8 8 -8 8 8 8" fill="none" stroke="#22d3ee" stroke-width="1.4"/>
+          <rect x="252" y="76" width="16" height="28" rx="3" fill="none" stroke="var(--line)" stroke-width="1.4"/>
+          <circle cx="86" cy="66" r="3.5" fill="none" stroke="var(--line)" stroke-width="1.2"/>
+          <circle cx="86" cy="66" r="1" fill="#93a4bd"/>
+          <text x="86" y="86" text-anchor="middle" font-family="monospace" font-size="8" fill="#93a4bd">MIC</text>
+          <rect x="72" y="100" width="34" height="22" rx="3" fill="none" stroke="var(--line)" stroke-width="1.2"/>
+          <text x="89" y="114" text-anchor="middle" font-family="monospace" font-size="8" fill="#93a4bd">SPK</text>
+          <circle cx="246" cy="44" r="2.5" fill="#34d399"/>
+        </svg>
+        <span class="media-label">设备示意 · ESP32-S3 开发板</span>
+      </div>
+      <!-- TODO(demo): 把下面整个 .video-ph 替换为
+           <video controls preload="metadata" poster="images/cloud-demo-poster.jpg" src="videos/cloud-demo.mp4" style="width:100%;aspect-ratio:16/9;border-radius:14px;"></video> -->
+      <div class="video-ph" style="--ac: var(--cyan)">
+        <div class="play">▶</div>
+        <div class="ph-title">云端管线实测 Demo</div>
+        <div class="ph-sub">VIDEO COMING SOON</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 模块二：端云协同 -->
+<!-- 02 端云协同 -->
 <section id="hub" class="wrap">
   <div class="sec-head reveal">
     <div class="sec-kicker">02 / HYBRID</div>
     <h2>端云协同 · Hub 模式</h2>
-    <p>在家庭/场所内放一台 Hub，敏感环节（ASR、记忆、隐私过滤）本地完成，重计算按需上云。一台 Hub 服务多台轻终端。</p>
+    <p>局域网内一台 Hub 承担 ASR、记忆与隐私过滤，重计算按需上云。语音不出户，一台 Hub 带多台终端。</p>
   </div>
   <div class="arch reveal" style="--ac: var(--violet)">
     <div class="arch-top">
       <span class="arch-num">ARCH-02</span>
       <h3>本地 Hub + 云端增强</h3>
       <span class="hw">终端: ESP32-S3</span>
-      <span class="hw">Hub: RK3588 / Apple Silicon 级</span>
+      <span class="hw">Hub: RK3588 级</span>
     </div>
     <div class="arch-body">
       <div>
-        <p class="arch-desc">终端仍是低成本 ESP32 设备，但音频先到<strong>局域网内的 Hub</strong>：本地完成 ASR 与会话记忆，语音永不出户；LLM 可跑本地小模型，也可只把<strong>脱敏后的文本</strong>发云端换取大模型能力。局域网一跳（~1ms）替代公网往返，延迟稳定可控。</p>
+        <p class="arch-desc">音频先到<strong>局域网 Hub</strong>：本地完成 ASR 与记忆，原始语音永不出户；LLM 跑本地小模型，或只把<strong>脱敏文本</strong>发云端换大模型能力。公网往返换成局域网一跳，延迟稳定，断网核心功能仍可用。</p>
         <div class="flow">
-          <span class="node hot">MIC · ESP32-S3</span><span class="arr">→</span>
-          <span class="node">局域网 ~1ms</span><span class="arr">→</span>
-          <span class="node hot">Hub: 本地 ASR + 记忆</span><span class="arr">→</span>
+          <span class="node hot">ESP32-S3</span><span class="arr">→</span>
+          <span class="node hot">Hub: ASR + 记忆</span><span class="arr">→</span>
           <span class="node">本地 LLM / 脱敏上云</span><span class="arr">→</span>
           <span class="node">TTS</span><span class="arr">→</span>
-          <span class="node hot">SPK</span>
+          <span class="node hot">播放</span>
         </div>
-        <ul class="pill-list">
-          <li>实测：本地 ASR ~300ms，全管线稳态 <b style="color:var(--violet)">~1.45s</b>（Intel CPU 级 Hub，热路径）</li>
-          <li>原始语音不出家门，只有脱敏文本可选上云——隐私结构性优势</li>
-          <li>断网时核心对话仍可用（本地小模型兜底）</li>
-          <li>一台 Hub 带多个终端，边际成本随设备数摊薄</li>
-        </ul>
       </div>
       <div class="metrics">
-        <h4>典型延迟画像 *</h4>
+        <h4>延迟画像 *（含实测）</h4>
         <div class="m-row"><span class="k">局域网传输</span><span class="v good">~1 ms</span></div>
-        <div class="m-row"><span class="k">本地流式 ASR（实测）</span><span class="v good">~300 ms</span></div>
+        <div class="m-row"><span class="k">本地流式 ASR<b style="color:var(--violet)">（实测）</b></span><span class="v good">~300 ms</span></div>
         <div class="m-row"><span class="k">LLM TTFT（本地 3B 级）</span><span class="v">250–500 ms</span></div>
-        <div class="m-row"><span class="k">端到端首响（实测热路径）</span><span class="v good">~1.45 s</span></div>
-        <div class="m-row"><span class="k">离线可用性</span><span class="v good">核心可用</span></div>
+        <div class="m-row"><span class="k">端到端首响<b style="color:var(--violet)">（实测）</b></span><span class="v good">~1.45 s</span></div>
+        <div class="m-row"><span class="k">离线可用</span><span class="v good">✓ 核心可用</span></div>
+      </div>
+    </div>
+    <div class="media-grid">
+      <div class="shot">
+        <!-- Hub 拓扑示意图（可替换为实拍照片 <img>） -->
+        <svg class="board-art" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hub 组网拓扑示意图">
+          <rect x="128" y="62" width="88" height="56" rx="9" fill="rgba(167,139,250,0.08)" stroke="#a78bfa" stroke-width="1.5"/>
+          <text x="172" y="86" text-anchor="middle" font-family="monospace" font-size="10" fill="#a78bfa">HUB</text>
+          <text x="172" y="102" text-anchor="middle" font-family="monospace" font-size="8" fill="#93a4bd">RK3588</text>
+          <circle cx="208" cy="72" r="2.5" fill="#34d399"/>
+          <g fill="rgba(34,211,238,0.05)" stroke="var(--line)" stroke-width="1.3">
+            <rect x="26" y="38" width="56" height="34" rx="6"/>
+            <rect x="26" y="112" width="56" height="34" rx="6"/>
+          </g>
+          <text x="54" y="59" text-anchor="middle" font-family="monospace" font-size="8" fill="#93a4bd">ESP32-S3</text>
+          <text x="54" y="133" text-anchor="middle" font-family="monospace" font-size="8" fill="#93a4bd">ESP32-S3</text>
+          <g stroke="rgba(147,164,189,0.5)" stroke-width="1.2">
+            <path d="M82 55 C 108 55, 108 76, 128 80" fill="none"/>
+            <path d="M82 129 C 108 129, 108 104, 128 100" fill="none"/>
+          </g>
+          <text x="100" y="94" text-anchor="middle" font-family="monospace" font-size="8" fill="#22d3ee">LAN ~1ms</text>
+          <path d="M247 52 a10 10 0 0 1 10 -9 a12 12 0 0 1 23 3 a9 9 0 0 1 -2 18 l-24 0 a9 9 0 0 1 -7 -12" fill="none" stroke="var(--line)" stroke-width="1.4"/>
+          <path d="M216 78 C 236 76, 244 70, 252 62" fill="none" stroke="rgba(147,164,189,0.5)" stroke-width="1.2" stroke-dasharray="4 4"/>
+          <text x="262" y="86" text-anchor="middle" font-family="monospace" font-size="8" fill="#93a4bd">脱敏文本</text>
+          <text x="172" y="150" text-anchor="middle" font-family="monospace" font-size="9" fill="#a78bfa">语音不出户</text>
+        </svg>
+        <span class="media-label">组网示意 · 一台 Hub 多终端</span>
+      </div>
+      <!-- TODO(demo): 把下面整个 .video-ph 替换为
+           <video controls preload="metadata" poster="images/hub-demo-poster.jpg" src="videos/hub-demo.mp4" style="width:100%;aspect-ratio:16/9;border-radius:14px;"></video> -->
+      <div class="video-ph" style="--ac: var(--violet)">
+        <div class="play">▶</div>
+        <div class="ph-title">Hub 全管线对话 Demo（实测 1.45s）</div>
+        <div class="ph-sub">VIDEO COMING SOON</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 模块三：纯端侧 -->
+<!-- 03 纯端侧 -->
 <section id="edge" class="wrap">
   <div class="sec-head reveal">
     <div class="sec-kicker">03 / EDGE</div>
     <h2>纯端侧推理</h2>
-    <p>整条管线塞进设备本体，零网络依赖。用 Jetson 或香橙派的 GPU/NPU 做本地推理加速，适合对离线、实时性、数据主权要求苛刻的场景。</p>
+    <p>整条管线跑在设备本体，零网络依赖。延迟只由算力决定——最稳定、最可预测。</p>
   </div>
   <div class="arch reveal" style="--ac: var(--green)">
     <div class="arch-top">
@@ -342,86 +410,111 @@
     </div>
     <div class="arch-body">
       <div>
-        <p class="arch-desc"><strong>Jetson Orin Nano</strong>（最高 67 TOPS，CUDA 生态）或<strong>香橙派 Orange Pi 5</strong>（RK3588，6 TOPS NPU，性价比路线）直接承载 ASR + LLM + TTS 全栈。没有任何网络环节，延迟只由本机算力决定——也因此最稳定、最可预测。</p>
+        <p class="arch-desc"><strong>Jetson Orin Nano</strong>（67 TOPS，CUDA 生态，3B–7B 流畅）或<strong>香橙派 OPi5</strong>（RK3588 NPU，性价比路线，1.5B–3B 量化）承载全栈。数据 100% 不离机，无 RTT 无抖动；代价是整机成本与功耗最高。</p>
         <div class="flow">
           <span class="node hot">MIC</span><span class="arr">→</span>
           <span class="node hot">本地 ASR</span><span class="arr">→</span>
-          <span class="node hot">本地 LLM (GPU/NPU 加速)</span><span class="arr">→</span>
+          <span class="node hot">本地 LLM (GPU/NPU)</span><span class="arr">→</span>
           <span class="node hot">本地 TTS</span><span class="arr">→</span>
           <span class="node hot">SPK</span>
         </div>
-        <ul class="pill-list">
-          <li>零网络依赖：无 RTT、无抖动、无云服务账单，延迟方差最小</li>
-          <li>数据 100% 不离机，天然满足最严数据合规</li>
-          <li>Jetson 路线：3B–7B 模型流畅（~20–40 tok/s）；香橙派路线：1.5B–3B 量化模型</li>
-          <li>整机成本与功耗最高（Jetson 千元级 / OPi5 数百元级），散热需设计</li>
-        </ul>
       </div>
       <div class="metrics">
-        <h4>典型延迟画像 *</h4>
+        <h4>延迟画像 *</h4>
         <div class="m-row"><span class="k">网络传输</span><span class="v good">0 ms</span></div>
         <div class="m-row"><span class="k">本地流式 ASR</span><span class="v good">150–300 ms</span></div>
-        <div class="m-row"><span class="k">LLM TTFT（Orin Nano / 3B）</span><span class="v">200–450 ms</span></div>
+        <div class="m-row"><span class="k">LLM TTFT（Orin / 3B）</span><span class="v">200–450 ms</span></div>
         <div class="m-row"><span class="k">端到端首响</span><span class="v good">0.9–1.6 s</span></div>
-        <div class="m-row"><span class="k">离线可用性</span><span class="v good">完全离线</span></div>
+        <div class="m-row"><span class="k">离线可用</span><span class="v good">✓ 完全离线</span></div>
+      </div>
+    </div>
+    <div class="media-grid">
+      <div class="shot">
+        <!-- Jetson 板卡示意图（可替换为实拍照片 <img>） -->
+        <svg class="board-art" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Jetson Orin Nano 板卡示意图">
+          <rect x="46" y="34" width="228" height="112" rx="10" fill="rgba(52,211,153,0.05)" stroke="var(--line)" stroke-width="1.5"/>
+          <rect x="88" y="52" width="112" height="76" rx="6" fill="none" stroke="#34d399" stroke-width="1.4"/>
+          <g stroke="rgba(52,211,153,0.6)" stroke-width="1.2">
+            <line x1="98" y1="56" x2="98" y2="124"/><line x1="110" y1="56" x2="110" y2="124"/><line x1="122" y1="56" x2="122" y2="124"/><line x1="134" y1="56" x2="134" y2="124"/><line x1="146" y1="56" x2="146" y2="124"/><line x1="158" y1="56" x2="158" y2="124"/><line x1="170" y1="56" x2="170" y2="124"/><line x1="182" y1="56" x2="182" y2="124"/><line x1="194" y1="56" x2="194" y2="124"/>
+          </g>
+          <circle cx="144" cy="90" r="24" fill="rgba(6,9,15,0.85)" stroke="#34d399" stroke-width="1.4"/>
+          <g stroke="#34d399" stroke-width="1.3" fill="none">
+            <path d="M144 90 q10 -14 2 -20"/><path d="M144 90 q14 10 20 2"/><path d="M144 90 q-10 14 -2 20"/><path d="M144 90 q-14 -10 -20 -2"/>
+          </g>
+          <circle cx="144" cy="90" r="3" fill="#34d399"/>
+          <text x="237" y="76" text-anchor="middle" font-family="monospace" font-size="9" fill="#34d399">JETSON</text>
+          <text x="237" y="90" text-anchor="middle" font-family="monospace" font-size="9" fill="#34d399">ORIN NANO</text>
+          <text x="237" y="106" text-anchor="middle" font-family="monospace" font-size="8" fill="#93a4bd">67 TOPS</text>
+          <g fill="none" stroke="var(--line)" stroke-width="1.3">
+            <rect x="58" y="146" width="26" height="8" rx="2"/><rect x="94" y="146" width="26" height="8" rx="2"/><rect x="130" y="146" width="26" height="8" rx="2"/>
+          </g>
+          <circle cx="260" cy="128" r="2.5" fill="#34d399"/>
+        </svg>
+        <span class="media-label">设备示意 · Jetson Orin Nano</span>
+      </div>
+      <!-- TODO(demo): 把下面整个 .video-ph 替换为
+           <video controls preload="metadata" poster="images/edge-demo-poster.jpg" src="videos/edge-demo.mp4" style="width:100%;aspect-ratio:16/9;border-radius:14px;"></video> -->
+      <div class="video-ph" style="--ac: var(--green)">
+        <div class="play">▶</div>
+        <div class="ph-title">本地推理实测 Demo</div>
+        <div class="ph-sub">VIDEO COMING SOON</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 对比 -->
+<!-- 04 对比 -->
 <section id="compare" class="wrap">
   <div class="sec-head reveal">
     <div class="sec-kicker">04 / BENCHMARK</div>
     <h2>速度与响应对比</h2>
-    <p>同一句话，三种架构分别要等多久？下面是端到端首响（用户说完 → 听到第一个字）的典型值对比。</p>
+    <p>同一句话，三种架构分别要等多久？</p>
   </div>
 
   <div class="chart-card reveal">
-    <div class="chart-title">端到端首响延迟（越短越好）</div>
-    <div class="chart-sub">条形取各架构典型区间中值 · 单位: 秒</div>
+    <div class="chart-title">端到端首响延迟（用户说完 → 听到第一个字，越短越好）</div>
+    <div class="chart-sub">条形取典型区间中值 · 单位: 秒</div>
     <div class="bar-group">
-      <div class="bar-label"><span class="name">☁️ 云端处理 · ESP32-S3 直连</span><span class="val">1.0 – 1.8 s（网络波动大）</span></div>
+      <div class="bar-label"><span class="name">☁️ 云端处理</span><span class="val">1.0 – 1.8 s · 随网络波动</span></div>
       <div class="bar-track"><div class="bar-fill bf-cloud" data-w="78%"></div></div>
     </div>
     <div class="bar-group">
-      <div class="bar-label"><span class="name">🏠 端云协同 · Hub 模式</span><span class="val">~1.45 s（实测，稳定）</span></div>
+      <div class="bar-label"><span class="name">🏠 端云协同 Hub</span><span class="val">~1.45 s · 实测，稳定</span></div>
       <div class="bar-track"><div class="bar-fill bf-hub" data-w="72%"></div></div>
     </div>
     <div class="bar-group">
-      <div class="bar-label"><span class="name">⚡ 纯端侧 · Jetson Orin Nano</span><span class="val">0.9 – 1.6 s（零网络方差）</span></div>
+      <div class="bar-label"><span class="name">⚡ 纯端侧 · Orin Nano</span><span class="val">0.9 – 1.6 s · 零网络方差</span></div>
       <div class="bar-track"><div class="bar-fill bf-edge" data-w="62%"></div></div>
     </div>
 
     <table>
       <thead>
-        <tr><th>指标</th><th>☁️ 云端处理</th><th>🏠 端云协同 Hub</th><th>⚡ 纯端侧</th></tr>
+        <tr><th>指标</th><th>☁️ 云端</th><th>🏠 Hub</th><th>⚡ 纯端侧</th></tr>
       </thead>
       <tbody>
-        <tr><td>ASR 延迟</td><td class="mono">200–400 ms</td><td class="mono ok">~300 ms（实测）</td><td class="mono ok">150–300 ms</td></tr>
-        <tr><td>LLM TTFT（首字延迟）</td><td class="mono">300–600 ms</td><td class="mono">250–500 ms</td><td class="mono ok">200–450 ms</td></tr>
-        <tr><td>网络往返开销</td><td class="mono no">80–200 ms + 抖动</td><td class="mono ok">~1 ms（局域网）</td><td class="mono ok">0 ms</td></tr>
-        <tr><td>延迟稳定性</td><td class="mid">受公网波动</td><td class="ok">稳定</td><td class="ok">最稳定</td></tr>
-        <tr><td>断网可用</td><td class="no">✕ 不可用</td><td class="ok">✓ 核心可用</td><td class="ok">✓ 完全可用</td></tr>
-        <tr><td>语音数据去向</td><td class="no">上云</td><td class="ok">不出户（可选脱敏文本上云）</td><td class="ok">不离机</td></tr>
-        <tr><td>单终端硬件成本</td><td class="ok">最低（几十元级）</td><td class="mid">终端低 + Hub 摊薄</td><td class="no">最高（数百–千元级）</td></tr>
-        <tr><td>模型能力上限</td><td class="ok">云端旗舰模型</td><td class="mid">本地小模型 + 云端增强</td><td class="mid">受本机算力限制</td></tr>
+        <tr><td>ASR 延迟</td><td class="mono">200–400 ms</td><td class="mono ok">~300 ms 实测</td><td class="mono ok">150–300 ms</td></tr>
+        <tr><td>LLM TTFT</td><td class="mono">300–600 ms</td><td class="mono">250–500 ms</td><td class="mono ok">200–450 ms</td></tr>
+        <tr><td>网络开销</td><td class="mono no">80–200 ms + 抖动</td><td class="mono ok">~1 ms 局域网</td><td class="mono ok">0 ms</td></tr>
+        <tr><td>断网可用</td><td class="no">✕</td><td class="ok">✓ 核心可用</td><td class="ok">✓ 完全可用</td></tr>
+        <tr><td>语音去向</td><td class="no">上云</td><td class="ok">不出户</td><td class="ok">不离机</td></tr>
+        <tr><td>单终端成本</td><td class="ok">最低</td><td class="mid">终端低 + Hub 摊薄</td><td class="no">最高</td></tr>
+        <tr><td>模型上限</td><td class="ok">云端旗舰</td><td class="mid">本地小模型 + 云增强</td><td class="mid">受本机算力限制</td></tr>
       </tbody>
     </table>
-    <p class="tbl-note">* 标注"实测"的数据来自我们在 Intel CPU 级 Hub 上跑通的语音全管线 PoC（热路径稳态）；其余为该类架构在正常网络/推荐硬件下的典型区间，实际值随模型大小、量化方案与网络环境浮动。</p>
+    <p class="tbl-note">* "实测"来自我们在 Intel CPU 级 Hub 上跑通的语音全管线 PoC（热路径稳态）；其余为典型区间，随模型大小、量化与网络环境浮动。</p>
   </div>
 </section>
 
-<!-- 选型建议 -->
+<!-- 05 选型 -->
 <section class="wrap">
   <div class="sec-head reveal">
     <div class="sec-kicker">05 / SOLUTION</div>
     <h2>怎么选？</h2>
   </div>
   <div class="pick-grid reveal">
-    <div class="pick"><b>☁️ 选云端处理，如果你要</b>快速出货、极致压低单机成本、需要旗舰大模型能力，且用户场景默认有稳定网络。</div>
-    <div class="pick"><b>🏠 选端云协同，如果你要</b>隐私作为产品卖点（语音不出户）、多设备共享一台算力、断网也要能用——延迟与成本的最佳平衡点。</div>
-    <div class="pick"><b>⚡ 选纯端侧，如果你要</b>完全离线运行、毫秒必较的确定性延迟、数据绝对不离机（工业、车载、安防、涉密场景）。</div>
+    <div class="pick"><b>☁️ 云端处理</b>快速出货、压低单机成本、要旗舰模型能力，且场景默认有稳定网络。</div>
+    <div class="pick"><b>🏠 端云协同</b>隐私是卖点、多设备共享算力、断网也要能用——延迟与成本的平衡点。</div>
+    <div class="pick"><b>⚡ 纯端侧</b>完全离线、确定性延迟、数据绝对不离机（工业 / 车载 / 涉密场景）。</div>
   </div>
 </section>
 
@@ -442,13 +535,11 @@
 </footer>
 
 <script>
-  // 滚动入场
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  // 图表条动画
   const chartIO = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
